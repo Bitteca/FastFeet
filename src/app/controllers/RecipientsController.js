@@ -59,7 +59,7 @@ class RecipientsController {
     const recipient = await Recipients.findByPk(req.params.id);
 
     if (!recipient) {
-      return res.status(401).json({ error: 'Recipient does not exists' });
+      return res.status(401).json({ error: 'Recipient not found' });
     }
     const {
       id,
