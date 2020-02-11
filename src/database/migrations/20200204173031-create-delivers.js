@@ -19,7 +19,7 @@ module.exports = {
         references: { model: 'couriers', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
-        allowNull: true,
+        allowNull: false,
       },
       signature_id: {
         type: Sequelize.INTEGER,
@@ -38,7 +38,7 @@ module.exports = {
       },
       start_date: {
         type: Sequelize.DATE,
-        allowNull: false,
+        allowNull: true,
       },
       end_date: {
         type: Sequelize.DATE,
