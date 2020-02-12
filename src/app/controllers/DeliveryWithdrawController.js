@@ -1,4 +1,5 @@
-import { parseISO, getHours, isSameDay } from 'date-fns';
+import { parseISO, getHours, isSameDay, startOfDay, endOfDay } from 'date-fns';
+import { Op } from 'sequelize';
 
 import * as Yup from 'yup';
 import Delivery from '../models/Delivery';
@@ -37,6 +38,23 @@ class DeliveryWithdrawController {
 
     if (!isSameDay(parsedStart, new Date())) {
       return res.status(400).json({ error: 'Invalid Date' });
+    }
+
+    const deliveriesAll = await Delivery.findAll({
+      where: {
+        courier_id: delivery.courier_id,
+        canceled_at: null,
+        start_date: {
+          [Op.between]: [startOfDay(parsedStart), endOfDay(parsedStart)],
+        },
+        end_date: null,
+      },
+    });
+
+    if (deliveriesAll.length >= 5) {
+      return res
+        .status(400)
+        .json({ error: 'Courier already have 5 deliveries on the day' });
     }
 
     const updatedDelivery = await delivery.update(req.body);
